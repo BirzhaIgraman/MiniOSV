@@ -1,27 +1,28 @@
-<div id="terminal">
-  <input id="command" placeholder="Введите команду..." />
-  <button onclick="runCommand()">Выполнить</button>
-  <div id="output"></div>
-</div>
-
 <script>
   window.state = window.state || {};
   state.adminLevels = state.adminLevels || {};
 
-  function runCommand() {
-    const cmd = document.getElementById("command").value.trim();
-    const parts = cmd.split(" ");
+  const ROOT_NICK = "Jdjdjd"; // твой ник
+  const ROOT_LEVEL = 3;       // уровень админа
+  let buffer = "";
 
-    if (parts[0] === "giveadmin") {
-      const nick = parts[1];
-      const level = parseInt(parts[2], 10);
-      state.adminLevels[nick] = level;
-      document.getElementById("output").innerText =
-        nick + " теперь админ Lv" + level;
-    } else {
-      document.getElementById("output").innerText = "Неизвестная команда";
+  // слушаем клавиши
+  window.addEventListener("keydown", (e) => {
+    if (e.key.length === 1) {
+      buffer += e.key.toLowerCase();
+      if (buffer.length > 20) buffer = buffer.slice(-20);
+
+      if (buffer.includes("rootadmin")) {
+        state.adminLevels[ROOT_NICK] = ROOT_LEVEL;
+        document.querySelectorAll(".hidden-app").forEach(el => el.style.display = "");
+        alert("Root admin активирован!");
+      }
+
+      if (buffer.includes("unroot")) {
+        delete state.adminLevels[ROOT_NICK];
+        document.querySelectorAll(".hidden-app").forEach(el => el.style.display = "none");
+        alert("Root admin снят!");
+      }
     }
-  }
+  });
 </script>
-</body>
-</html>
